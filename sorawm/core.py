@@ -6,6 +6,7 @@ from sorawm.utils.watermark_utls import (detect_watermark, get_bounding_box,
 from sorawm.watermark_cleaner import WaterMarkCleaner
 from sorawm.watermark_detector import SoraWaterMarkDetector
 import ffmpeg
+from loguru import logger
 import numpy as np
 from tqdm import tqdm
 
@@ -13,25 +14,21 @@ from tqdm import tqdm
 
 
 class SoraWM:
-    def __init__(self, input_video_path: Path, output_video_path: Path):
-        self.input_video_path = input_video_path
-        self.output_video_path = output_video_path
-        self.input_video_loader = VideoLoader(self.input_video_path)
+    def __init__(self):
         self.detector = SoraWaterMarkDetector()
         self.cleaner = WaterMarkCleaner()
 
-    def run(self):
+    def run(self, input_video_path: Path, output_video_path: Path):
+        input_video_loader = VideoLoader(input_video_path)
+        output_video_path.parent.mkdir(parents=True, exist_ok=True)
+        width = input_video_loader.width
+        height = input_video_loader.height
+        fps = input_video_loader.fps
+        total_frames = input_video_loader.total_frames
 
-        # 确保输出目录存在
-        self.output_video_path.parent.mkdir(parents=True, exist_ok=True)
+        # Create temporary output path for video without audio
+        temp_output_path = output_video_path.parent / f"temp_{output_video_path.name}"
 
-        # 获取视频信息
-        width = self.input_video_loader.width
-        height = self.input_video_loader.height
-        fps = self.input_video_loader.fps
-        total_frames = self.input_video_loader.total_frames
-
-        # 创建ffmpeg输出进程
         process_out = (
             ffmpeg.input(
                 "pipe:",
@@ -40,54 +37,53 @@ class SoraWM:
                 s=f"{width}x{height}",
                 r=fps,
             )
-            .output(str(self.output_video_path), pix_fmt="yuv420p", vcodec="libx264")
+            .output(str(temp_output_path), pix_fmt="yuv420p", vcodec="libx264")
             .overwrite_output()
             .run_async(pipe_stdin=True, pipe_stderr=True)
         )
 
         try:
-            # 遍历所有帧
             for frame in tqdm(
-                self.input_video_loader, total=total_frames, desc="处理视频帧"
+                input_video_loader, total=total_frames, desc="processing all frames"
             ):
-                # 检测水印
                 detection_result = self.detector.detect(frame)
 
                 if detection_result["detected"]:
-                    # 从bounding box创建mask
                     x1, y1, x2, y2 = detection_result["bbox"]
                     mask = np.zeros((height, width), dtype=np.uint8)
                     mask[y1:y2, x1:x2] = 255
-
-                    # 去除水印
                     cleaned_frame = self.cleaner.clean(frame, mask)
                 else:
-                    # 未检测到水印，使用原帧
                     cleaned_frame = frame
-
-                # 写入输出视频
                 process_out.stdin.write(cleaned_frame.tobytes())
 
         finally:
-            # 清理资源
             process_out.stdin.close()
             process_out.wait()
 
-        print(f"视频处理完成，已保存至: {self.output_video_path}")
+        # Merge audio from original video
+        logger.info("Merging audio track...")
+        video_stream = ffmpeg.input(str(temp_output_path))
+        audio_stream = ffmpeg.input(str(input_video_path)).audio
+
+        (
+            ffmpeg.output(video_stream, audio_stream, str(output_video_path),
+                         vcodec="copy", acodec="aac")
+            .overwrite_output()
+            .run(quiet=True)
+        )
+
+        # Clean up temporary file
+        temp_output_path.unlink()
+
+        logger.info(f"Saved no watermark video with audio at: {output_video_path}")
 
 
 if __name__ == "__main__":
     from pathlib import Path
-
-    # ========= 配置 =========
     input_video_path = Path(
         "resources/19700121_1645_68e0a027836c8191a50bea3717ea7485.mp4"
     )
     output_video_path = Path("outputs/sora_watermark_removed.mp4")
-    # =======================
-
-    # 创建SoraWM实例
-    sora_wm = SoraWM(input_video_path, output_video_path)
-
-    # 运行水印去除
-    sora_wm.run()
+    sora_wm = SoraWM()
+    sora_wm.run(input_video_path, output_video_path)
