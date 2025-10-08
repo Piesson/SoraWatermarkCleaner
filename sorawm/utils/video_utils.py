@@ -32,7 +32,8 @@ class VideoLoader:
         process_in = (
             ffmpeg.input(self.video_path)
             .output("pipe:", format="rawvideo", pix_fmt="bgr24")
-            .run_async(pipe_stdout=True, pipe_stderr=True)
+            .global_args('-loglevel', 'error')
+            .run_async(pipe_stdout=True)
         )
 
         try:

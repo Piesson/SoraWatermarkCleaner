@@ -11,8 +11,6 @@ from sorawm.utils.watermark_utls import (detect_watermark, get_bounding_box,
 from sorawm.watermark_cleaner import WaterMarkCleaner
 from sorawm.watermark_detector import SoraWaterMarkDetector
 
-# based on the sora tempalte to detect the whole, and then got the icon part area.
-
 
 class SoraWM:
     def __init__(self):
@@ -40,7 +38,8 @@ class SoraWM:
             )
             .output(str(temp_output_path), pix_fmt="yuv420p", vcodec="libx264")
             .overwrite_output()
-            .run_async(pipe_stdin=True, pipe_stderr=True)
+            .global_args('-loglevel', 'error')
+            .run_async(pipe_stdin=True)
         )
 
         try:

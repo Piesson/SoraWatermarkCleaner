@@ -1,13 +1,12 @@
 from pathlib import Path
-from re import T
 
 ROOT = Path(__file__).parent.parent
 
 
-RESOUCRES_DIR = ROOT / "resources"
-WATER_MARK_TEMPLATE_IMAGE_PATH = RESOUCRES_DIR / "watermark_template.png"
+RESOURCES_DIR = ROOT / "resources"
+WATER_MARK_TEMPLATE_IMAGE_PATH = RESOURCES_DIR / "watermark_template.png"
 
-WATER_MARK_DETECT_YOLO_WEIGHTS = RESOUCRES_DIR / "best.pt"
+WATER_MARK_DETECT_YOLO_WEIGHTS = RESOURCES_DIR / "best.pt"
 
 OUTPUT_DIR = ROOT / "output"
 

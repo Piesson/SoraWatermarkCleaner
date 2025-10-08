@@ -10,8 +10,8 @@ DETECTOR_URL = "https://github.com/linkedlist771/SoraWatermarkCleaner/releases/d
 
 
 def download_detector_weights():
-    if not WATER_MARK_DETECT_YOLO_WEIGHTS.exists():     
-        logger.debug(f"llama weights not found, downloading from {DETECTOR_URL}")   
+    if not WATER_MARK_DETECT_YOLO_WEIGHTS.exists():
+        logger.debug(f"llama weights not found, downloading from {DETECTOR_URL}")
         WATER_MARK_DETECT_YOLO_WEIGHTS.parent.mkdir(parents=True, exist_ok=True)
 
         try:
