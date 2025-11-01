@@ -4,15 +4,18 @@
 
 这个项目提供了一种优雅的方式来移除 Sora2 生成视频中的 Sora 水印。
 
-
-- 移除水印后
-
-https://github.com/user-attachments/assets/8cdc075e-7d15-4d04-8fa2-53dd287e5f4c
-
-- 原始视频
-
-https://github.com/user-attachments/assets/3c850ff1-b8e3-41af-a46f-2c734406e77d
-
+<table>
+  <tr>
+    <td width="50%">
+      <h3 align="center">移除水印后</h3>
+      <video src="https://github.com/user-attachments/assets/8cdc075e-7d15-4d04-8fa2-53dd287e5f4c" width="100%"></video>
+    </td>
+    <td width="50%">
+      <h3 align="center">原始视频</h3>
+      <video src="https://github.com/user-attachments/assets/4f032fc7-97da-471b-9a54-9de2a434fa57" width="100%"></video>
+    </td>
+  </tr>
+</table>
 ⭐️: 
 
 1. **YOLO 权重已更新** — 请尝试新版本的水印检测模型，效果会更好！
@@ -21,6 +24,9 @@ https://github.com/user-attachments/assets/3c850ff1-b8e3-41af-a46f-2c734406e77d
 
 3. **一键便携版已发布** — [点击这里下载](#3-一键便携版)，Windows 用户无需安装即可使用！
 
+---
+
+💝 如果你觉得这个项目有帮助，欢迎[请我喝杯咖啡](mds/reward.md)支持项目开发！
 
 ## 1. 方法
 

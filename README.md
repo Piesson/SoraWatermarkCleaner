@@ -1,10 +1,8 @@
 # SoraWatermarkCleaner
 
-English | [中文](README-zh.md)
+English | [中文](README-zh.md) 
 
-This project provides an elegant way to remove the sora watermark in the sora2 generated videos.
-
-
+This project provides an elegant way to remove the sora watermark in the sora2 generated videos. 
 
 <table>
   <tr>
@@ -18,21 +16,16 @@ This project provides an elegant way to remove the sora watermark in the sora2 g
     </td>
   </tr>
 </table>
-
-
-
-
-
-
-
-
 ⭐️: 
 
-1. **Yolo weights has been updated, try the new version watermark detect model, it should work better. **
+1. **For the new watermark with username,  the Yolo weights has been updated, try the new version watermark detect model, it should work better. **
 
 2. **We have uploaded the labelled datasets into huggingface, check this [dataset](https://huggingface.co/datasets/LLinked/sora-watermark-dataset) out. Free free to train your custom detector model or improve our model!**
 3. **One-click portable build is available** — [Download here](#3-one-click-portable-version) for Windows users! No installation required.
 
+---
+
+💝 If you find this project helpful, please consider [buying me a coffee](mds/reward.md) to support the development!
 
 ## 1. Method
 
