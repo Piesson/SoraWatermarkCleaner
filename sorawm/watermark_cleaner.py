@@ -27,7 +27,12 @@ class WaterMarkCleaner:
             )
             cli_download_model(self.model)
         self.model_manager = ModelManager(name=self.model, device=self.device)
-        self.inpaint_request = InpaintRequest(ldm_steps=40)
+        self.inpaint_request = InpaintRequest(
+            ldm_steps=40,  # Increased from 20 for better quality
+            hd_strategy="RESIZE",  # Changed from CROP for more natural results
+            hd_strategy_crop_margin=196,  # Increased from 128 for better context
+            hd_strategy_resize_limit=2048,  # Increased from 1280 for higher resolution
+        )
 
     def clean(self, input_image: np.array, watermark_mask: np.array) -> np.array:
         inpaint_result = self.model_manager(
