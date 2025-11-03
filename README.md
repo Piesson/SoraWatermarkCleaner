@@ -82,7 +82,53 @@ For users who prefer a ready-to-use solution without manual installation, we pro
 
 Simply download, extract, and run!
 
-## 4.  Demo
+## 4. Quality Settings (Optional)
+
+You can adjust the quality settings to get better results. By default, the cleaner uses balanced settings, but you can improve quality by modifying `sorawm/watermark_cleaner.py`:
+
+### Default Settings (Fast)
+```python
+self.inpaint_request = InpaintRequest()  # Uses default values
+```
+
+### High Quality Settings (Recommended)
+```python
+self.inpaint_request = InpaintRequest(
+    ldm_steps=40,              # More refinement steps (default: 20)
+    hd_strategy="RESIZE",      # Better for natural results (default: "CROP")
+    hd_strategy_crop_margin=196,      # More context area (default: 128)
+    hd_strategy_resize_limit=2048,    # Higher resolution support (default: 1280)
+)
+```
+
+### What Each Setting Does
+
+- **ldm_steps**: Controls how many times the AI refines the removed area
+  - Higher = sharper results, less blur
+  - Lower = faster processing
+  - Recommended: 40-60 for high quality
+
+- **hd_strategy**: How the image is processed
+  - `"RESIZE"`: Shrinks the whole image, processes it, then restores size (smoother, more natural)
+  - `"CROP"`: Cuts image into pieces and processes each (faster, but may have visible boundaries)
+
+- **hd_strategy_crop_margin**: Extra pixels around the watermark to consider
+  - Higher = more context for better blending
+  - Recommended: 196-256
+
+- **hd_strategy_resize_limit**: Maximum resolution for processing
+  - Higher = supports larger videos without quality loss
+  - Recommended: 2048 for HD videos
+
+### Quality vs Speed Trade-off
+
+| Setting | Processing Time | Quality | Best For |
+|---------|----------------|---------|----------|
+| Default | 1x (fastest) | Good | Quick tests |
+| ldm_steps=40 | ~2x | Better | Most videos |
+| All high quality | ~3x | Best | Final output |
+
+## 5.  Demo
 
 To have a basic usage, just try the `example.py`:
 
@@ -110,7 +156,7 @@ streamlit run app.py
 
 <img src="resources/app.png" style="zoom: 25%;" />
 
-## 5. WebServer
+## 6. WebServer
 
 Here, we provide a **FastAPI-based web server** that can quickly turn this watermark remover into a service.
 
@@ -144,20 +190,20 @@ Once finished, the returned data will include a **download URL**.
 
 You can use the **download URL** from step 2 to retrieve the cleaned video.
 
-## 6. Datasets
+## 7. Datasets
 
 We have uploaded the labelled datasets into huggingface, check this out https://huggingface.co/datasets/LLinked/sora-watermark-dataset. Free free to train your custom detector model or improve our model!
 
-## 7. API
+## 8. API
 
 Packaged as a Cog and [published to Replicate](https://replicate.com/uglyrobot/sora2-watermark-remover) for simple API based usage.
 
-## 8. License
+## 9. License
 
  Apache License
 
 
-## 9. Citation
+## 10. Citation
 
 If you use this project, please cite:
 
@@ -170,7 +216,7 @@ If you use this project, please cite:
 }
 ```
 
-## 10. Acknowledgments
+## 11. Acknowledgments
 
 - [IOPaint](https://github.com/Sanster/IOPaint) for the LAMA implementation
 - [Ultralytics YOLO](https://github.com/ultralytics/ultralytics) for object detection
