@@ -27,7 +27,7 @@ class WaterMarkCleaner:
             )
             cli_download_model(self.model)
         self.model_manager = ModelManager(name=self.model, device=self.device)
-        self.inpaint_request = InpaintRequest()
+        self.inpaint_request = InpaintRequest(ldm_steps=40)
 
     def clean(self, input_image: np.array, watermark_mask: np.array) -> np.array:
         inpaint_result = self.model_manager(
