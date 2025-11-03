@@ -229,3 +229,7 @@ upload_to_huggingface.py
 resources/best.pt
 resources/model_version.json
 .web
+
+# Input videos (user data)
+inputs/
+inputs/*
